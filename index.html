@@ -1,1 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>♥ Minihomepy ♥</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<style>
+/* ===== 기본 (낮 테마) ===== */
+body{
+  margin:0;
+  background:#ffd6e8;
+  font-family:'Press Start 2P', cursive;
+  color:#5a0035;
+  text-align:center;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(#ffb6d5 1px, transparent 1px),
+    linear-gradient(90deg,#ffb6d5 1px, transparent 1px);
+  background-size:20px 20px;
+  opacity:.4;
+  z-index:-1;
+}
+
+/* 🌙 밤 테마 */
+body.night{
+  background:#1a0010;
+  color:#ffd6e8;
+}
+
+body.night::before{
+  background-image:
+    linear-gradient(#3a0030 1px, transparent 1px),
+    linear-gradient(90deg,#3a0030 1px, transparent 1px);
+  opacity:.6;
+}
+
+/* 공통 */
+.sparkle{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:url("https://i.imgur.com/7bK1z5k.gif");
+  opacity:.15;
+}
+
+#lock{ margin-top:140px; }
+
+input,button{
+  font-family:inherit;
+  padding:10px;
+  border:3px solid #ff69b4;
+  background:#fff0f8;
+}
+
+body.night input,
+body.night button{
+  background:#2a001a;
+  color:#ffd6e8;
+  border-color:#ff85c2;
+}
+
+button{ cursor:pointer; margin-top:10px; }
+
+.container{
+  display:none;
+  max-width:480px;
+  margin:30px auto;
+  background:#fff0f8;
+  border:5px double #ff69b4;
+  padding:20px;
+}
+
+body.night .container{
+  background:#2a001a;
+  border-color:#ff85c2;
+}
+
+.header{ font-size:10px; margin-bottom:20px; }
+
+.box{
+  border:3px dashed #ff69b4;
+  background:#ffe6f2;
+  padding:15px;
+  margin:40px 0;
+  font-size:10px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:.8s;
+}
+
+body.night .box{
+  background:#3a0025;
+  border-color:#ff85c2;
+}
+
+.box.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.footer{
+  font-size:8px;
+  margin-top:30px;
+}
+
+.bgm-btn,
+.theme-btn{
+  font-size:8px;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sparkle"></div>
+
+<!-- 🔒 비밀번호 -->
+<div id="lock">
+  <h1>♥ OUR MINIHOME ♥</h1>
+  <p style="font-size:10px;">PASSWORD</p>
+  <input type="password" id="pw" placeholder="기념일">
+  <br>
+  <button onclick="unlock()">ENTER</button>
+</div>
+
+<!-- 💗 본문 -->
+<div class="container" id="content">
+
+  <!-- 🎵 배경음악 -->
+  <audio id="bgm" autoplay loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="header">
+    TODAY 1 | TOTAL 1024<br><br>
+    ♥ D+<span id="days"></span>
+  </div>
+
+  <button class="bgm-btn" onclick="toggleBgm()">♪ BGM ON / OFF</button><br>
+  <button class="theme-btn" onclick="toggleTheme()">🌙 NIGHT MODE</button>
+
+  <div class="box">
+    안녕 :)<br><br>
+    이 미니홈피는<br>
+    너만 들어올 수 있는<br>
+    우리만의 공간이야 ♥
+  </div>
+
+  <div class="box">
+    낮에는 귀엽게,<br>
+    밤에는 더 솔직하게.<br><br>
+    이 공간에서만큼은<br>
+    마음껏 사랑하자 🌙
+  </div>
+
+  <div class="box">
+    <b>방명록</b><br><br>
+    ♥ 항상 고마워 ♥<br>
+    - 너의 사람 -
+  </div>
+
+  <div class="footer">
+    © jisoo miniworld
+  </div>
+</div>
+
+<script>
+/* 🔐 비밀번호 */
+const PASSWORD="0101";
+
+function unlock(){
+  if(pw.value===PASSWORD){
+    lock.style.display="none";
+    content.style.display="block";
+    reveal();
+    bgm.play();
+  } else alert("삐- 비밀번호가 틀렸어요!");
+}
+
+/* 📅 D+ */
+const startDate=new Date("2023-01-01");
+days.innerText=Math.floor((new Date()-startDate)/(1000*60*60*24));
+
+/* 💌 스크롤 등장 */
+function reveal(){
+  const boxes=document.querySelectorAll(".box");
+  window.addEventListener("scroll",()=>{
+    boxes.forEach(b=>{
+      if(b.getBoundingClientRect().top<innerHeight-50)
+        b.classList.add("show");
+    });
+  });
+}
+
+/* 🎵 BGM */
+const bgm=document.getElementById("bgm");
+function toggleBgm(){
+  bgm.paused ? bgm.play() : bgm.pause();
+}
+
+/* 🌙 테마 전환 */
+function toggleTheme(){
+  document.body.classList.toggle("night");
+}
+</script>
+
+</body>
+</html>
