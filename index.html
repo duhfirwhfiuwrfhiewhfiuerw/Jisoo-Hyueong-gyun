@@ -174,37 +174,40 @@ body.night .box{
 
 <script>
 /* 🔐 비밀번호 */
-const PASSWORD="0728";
+const PASSWORD = "0728";
 
-  function unlock(){
+const bgm = document.getElementById("bgm");
+const days = document.getElementById("days");
+
+/* 🔓 잠금 해제 */
+function unlock(){
   const pw = document.getElementById("pw");
   const lock = document.getElementById("lock");
   const content = document.getElementById("content");
-  if(pw.value===PASSWORD){
-    lock.style.display="none";
-    content.style.display="block";
+
+  if (pw.value === PASSWORD) {
+    lock.style.display = "none";
+    content.style.display = "block";
     reveal();
     bgm.play();
-  } else alert("삐- 비밀번호가 틀렸어요!");
+  } else {
+    alert("삐- 비밀번호가 틀렸어요!");
+  }
 }
 
 /* 📅 D+ */
-const startDate=new Date("2026-03-02");
-days.innerText=Math.floor((new Date()-startDate)/(1000*60*60*24));
+const startDate = new Date("2026-03-02");
+days.innerText = Math.floor(
+  (new Date() - startDate) / (1000*60*60*24)
+);
 
-/* 💌 스크롤 등장 */
+/* 💌 박스 등장 */
 function reveal(){
-  const boxes=document.querySelectorAll(".box");
-  window.addEventListener("scroll",()=>{
-    boxes.forEach(b=>{
-      if(b.getBoundingClientRect().top<innerHeight-50)
-        b.classList.add("show");
-    });
-  });
+  const boxes = document.querySelectorAll(".box");
+  boxes.forEach(b => b.classList.add("show"));
 }
 
 /* 🎵 BGM */
-const bgm=document.getElementById("bgm");
 function toggleBgm(){
   bgm.paused ? bgm.play() : bgm.pause();
 }
