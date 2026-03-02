@@ -115,6 +115,11 @@ body.night .box{
   font-size:8px;
   margin-top:10px;
 }
+
+/* 유튜브 플레이어 숨김 처리 */
+#bgm-iframe {
+  display: none;
+}
 </style>
 </head>
 
@@ -122,7 +127,6 @@ body.night .box{
 
 <div class="sparkle"></div>
 
-<!-- 🔒 비밀번호 -->
 <div id="lock">
   <h1>♥ OUR MINIHOME ♥</h1>
   <p style="font-size:10px;">PASSWORD</p>
@@ -131,13 +135,9 @@ body.night .box{
   <button onclick="unlock()">ENTER</button>
 </div>
 
-<!-- 💗 본문 -->
 <div class="container" id="content">
 
-  <!-- 🎵 배경음악 -->
-  <audio id="bgm" loop>
-    <source src="music.mp3" type="audio/mpeg">
-  </audio>
+  <iframe id="bgm-iframe" width="0" height="0" src="https://www.youtube.com/embed/DC13_hnbzCA?enablejsapi=1&autoplay=0&start=0&mute=0&playsinline=1&controls=0&loop=1&playlist=DC13_hnbzCA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
   <div class="header">
     TODAY 1 | TOTAL 1024<br><br>
@@ -176,8 +176,8 @@ body.night .box{
 /* 🔐 비밀번호 */
 const PASSWORD = "0728";
 
-const bgm = document.getElementById("bgm");
 const days = document.getElementById("days");
+let isBgmPlaying = false; // BGM 상태 확인용
 
 /* 🔓 잠금 해제 */
 function unlock(){
@@ -189,7 +189,11 @@ function unlock(){
     lock.style.display = "none";
     content.style.display = "block";
     reveal();
-    bgm.play();
+    
+    // 유튜브 영상 재생 (엔터 눌렀을 때)
+    const iframe = document.getElementById("bgm-iframe").contentWindow;
+    iframe.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+    isBgmPlaying = true;
   } else {
     alert("삐- 비밀번호가 틀렸어요!");
   }
@@ -207,9 +211,17 @@ function reveal(){
   boxes.forEach(b => b.classList.add("show"));
 }
 
-/* 🎵 BGM */
+/* 🎵 BGM ON/OFF (유튜브 제어) */
 function toggleBgm(){
-  bgm.paused ? bgm.play() : bgm.pause();
+  const iframe = document.getElementById("bgm-iframe").contentWindow;
+  
+  if (isBgmPlaying) {
+    iframe.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); // 일시정지
+    isBgmPlaying = false;
+  } else {
+    iframe.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); // 재생
+    isBgmPlaying = true;
+  }
 }
 
 /* 🌙 테마 전환 */
@@ -220,3 +232,4 @@ function toggleTheme(){
 
 </body>
 </html>
+
